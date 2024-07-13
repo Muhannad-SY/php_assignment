@@ -41,14 +41,9 @@
                 <td><?= $row['created_at'] ?></td>
                 <td>
                     <form action="index.php" method="get">
-                        <button type="submit" name="delete" value="<?= $row['id']?>">Delete</button>
+                        <button type="submit" name="delete" value="<?= $row['id'] ?>">Delete</button>
                     </form>
-                    <?php
-                    if (isset($_GET['delete'])) {
-                        include 'deleteAccount.php';
-                        deleteCostumer($_GET['delete']);
-                    }
-                    ?>
+
                 </td>
                 <td>
                     <button>Edit</button>
@@ -68,5 +63,12 @@
 
 
 </body>
+<?php
+if (isset($_GET['delete'])) {
+    include 'deleteAccount.php';
+    deleteCostumer($_GET['delete']);
+  
+}
+?>
 
 </html>

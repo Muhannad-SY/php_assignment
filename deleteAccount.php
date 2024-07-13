@@ -14,10 +14,26 @@ if ($conn->connect_error) {
 function deleteCostumer(int $id)
 {
     global $conn;
-    
-    $sql = $conn->prepare("DELETE FROM customers WHERE id = ?");
-    $sql->bind_param("i", $id);
-    $sql->execute();
+
+    $conn->begin_transaction();
+    try{
+        $sql = $conn->query("DELETE FROM orders WHERE customer_id  = $id");
+        if ($sql === false) {
+            throw new Exception('Prepare failed: ' . htmlspecialchars($conn->error));
+        }
+
+        $sql1 = $conn->query("DELETE FROM customers WHERE id = $id");
+
+        if ($sql === false) {
+            throw new Exception('Prepare failed: ' . htmlspecialchars($conn->error));
+        }
+
+        $conn->commit();
+    }catch (Exception $e){
+        $conn->rollback();
+        echo "Error deleting customer and related orders: " . $e->getMessage();
+
+    }
    
 }
 ?>
